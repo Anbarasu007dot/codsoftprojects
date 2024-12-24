@@ -1,91 +1,89 @@
 import tkinter as tk
-from tkinter import *
+import ttkbootstrap as ttk
+from ttkbootstrap.constants import *
 
-root = Tk()
-root.title("ToDoList")
-root.geometry("400x650+400+100")
-root.resizable(False, False)
-taskList = []
-
-def deletetask():
-    global taskList
-    task = str(listbox.get(ANCHOR))
-    if task in taskList:
-        taskList.remove(task)
-        with open("tasklist.txt", "w") as taskfile:
-            for task in taskList:
-                taskfile.write(task.strip() + "\n")
-        listbox.delete(ANCHOR)
-
-def addtask():
-    task = taskEntry.get()
-    taskEntry.delete(0, END)
-    if task:
-        with open("tasklist.txt", "a") as taskfile:
-            taskfile.write(task.strip() + "\n")
-        taskList.append(task.strip())
-        listbox.insert(END, task.strip())
-
-def opentaskfile():
+calculation=""
+def addtocalculation(symbol):
+    global calculation
+    calculation+=str(symbol)
+    textresult.delete(1.0,"end")
+    textresult.insert(1.0,calculation)
+def evaluatecalculation():
+    global  calculation
     try:
-        global taskList
-        with open("tasklist.txt", "r") as taskfile:
-            tasks = taskfile.readlines()
+        result=str(eval(calculation))
+        calculation=""
+        textresult.delete(1.0,"end")
+        textresult.insert(1.0,result)
+    except:
+        clearfield()
+        textresult.insert(1.0,"error")
+def clearfield():
+    global  calculation
+    calculation=""
+    textresult.delete(1.0,'end')
 
-        for task in tasks:
-            task = task.strip()
-            if task:
-                taskList.append(task)
-                listbox.insert(END, task)
-    except FileNotFoundError:
-        with open("tasklist.txt", "w") as taskfile:
-            pass
+root=tk.Tk()
+root.geometry("400x300")
+root.title("Calculator App")
 
-try:
-    imageIcon = PhotoImage(file="task.png")
-    root.iconphoto(False, imageIcon)
-except:
-    print("Icon file not found!")
 
-try:
-    TopImage = PhotoImage(file="topbar.png")
-    Label(root, image=TopImage).pack()
-except:
-    pass
 
-heading = Label(root, text="All Task", font="arial 20 bold", fg="white", bg="#32405b")
-heading.pack(pady=10)
 
-frame = Frame(root, width=400, height=50, bg="white")
-frame.pack(pady=10)
+textresult=tk.Text(root,height=2,width=22,font=("arial",24))
+textresult.grid(columnspan=5)
+btn1 = tk.Button(root, text="1", command=lambda: addtocalculation(1), width=5, font=("arial", 14))
+btn1.grid(row=2, column=1)
 
-taskEntry = Entry(frame, width=18, font="arial 20", bd=0)
-taskEntry.pack(side=LEFT, padx=10)
+btn2 = tk.Button(root, text="2", command=lambda: addtocalculation(2), width=5, font=("arial", 14))
+btn2.grid(row=2, column=2)
 
-button = Button(frame, text="ADD", font="arial 20 bold", width=6, bg="#5a95ff", fg="#fff", bd=0, command=addtask)
-button.pack(side=RIGHT)
+btn3 = tk.Button(root, text="3", command=lambda: addtocalculation(3), width=5, font=("arial", 14))
+btn3.grid(row=2, column=3)
 
-frame1 = Frame(root, bd=3, width=400, height=300, bg="#32405b")
-frame1.pack(pady=10)
+btn4 = tk.Button(root, text="4", command=lambda: addtocalculation(4), width=5, font=("arial", 14))
+btn4.grid(row=3, column=1)
 
-listbox = Listbox(frame1, font=('arial', 23), width=40, height=10, bg="#32405b", fg="white", cursor="hand2", selectbackground="#5a95ff")
-listbox.pack(side=LEFT, fill=BOTH, padx=2)
+btn5 = tk.Button(root, text="5", command=lambda: addtocalculation(5), width=5, font=("arial", 14))
+btn5.grid(row=3, column=2)
 
-scrollbar = Scrollbar(frame1)
-scrollbar.pack(side=RIGHT, fill=Y)
+btn6 = tk.Button(root, text="6", command=lambda: addtocalculation(6), width=5, font=("arial", 14))
+btn6.grid(row=3, column=3)
 
-listbox.config(yscrollcommand=scrollbar.set)
-scrollbar.config(command=listbox.yview)
+btn7 = tk.Button(root, text="7", command=lambda: addtocalculation(7), width=5, font=("arial", 14))
+btn7.grid(row=4, column=1)
 
-opentaskfile()
+btn8 = tk.Button(root, text="8", command=lambda: addtocalculation(8), width=5, font=("arial", 14))
+btn8.grid(row=4, column=2)
 
-try:
-    Delete_icon = PhotoImage(file="delete.png")
-    delete_button = Button(root, image=Delete_icon, bd=0, command=deletetask)
-    delete_button.pack(side=BOTTOM, pady=13)
-    delete_button.image = Delete_icon
-except:
-    delete_button = Button(root, text="Delete", font="arial 14 bold", bg="#ff4d4d", fg="white", bd=0, command=deletetask)
-    delete_button.pack(side=BOTTOM, pady=10, fill=X)
+btn9 = tk.Button(root, text="9", command=lambda: addtocalculation(9), width=5, font=("arial", 14))
+btn9.grid(row=4, column=3)
+
+btn0 = tk.Button(root, text="0", command=lambda: addtocalculation(0), width=5, font=("arial", 14))
+btn0.grid(row=5, column=2)
+
+btnplus = tk.Button(root, text="+", command=lambda: addtocalculation("+"), width=5, font=("arial", 14))
+btnplus.grid(row=2, column=4)
+
+btnminus = tk.Button(root, text="-", command=lambda: addtocalculation("-"), width=5, font=("arial", 14))
+btnminus.grid(row=3, column=4)
+
+btnmultiply = tk.Button(root, text="*", command=lambda: addtocalculation("*"), width=5, font=("arial", 14))
+btnmultiply.grid(row=4, column=4)
+
+btndivide = tk.Button(root, text="/", command=lambda: addtocalculation("/"), width=5, font=("arial", 14))
+btndivide.grid(row=5, column=4)
+
+btnopen = tk.Button(root, text="(", command=lambda: addtocalculation("("), width=5, font=("arial", 14))
+btnopen.grid(row=5, column=1)
+
+btnclose = tk.Button(root, text=")", command=lambda: addtocalculation(")"), width=5, font=("arial", 14))
+btnclose.grid(row=5, column=3)
+
+btnequal = tk.Button(root, text="=", command=evaluatecalculation, width=14, font=("arial", 14))
+btnequal.grid(row=6, column=3,columnspan=2)
+
+btnclear = tk.Button(root, text="C", command=clearfield, width=13, font=("arial", 14))
+btnclear.grid(row=6, column=1,columnspan=2)
 
 root.mainloop()
